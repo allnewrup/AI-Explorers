@@ -26,7 +26,7 @@ export default function ChildLayout({ children }: { children: React.ReactNode })
           </Suspense>
         }
       />
-      <main id="main-content" className="container-page flex-1 py-6 pb-28 sm:py-8 md:pb-12">
+      <main id="main-content" className="container-page flex-1 py-6 pb-28 sm:py-8 sm:pb-28 lg:pb-12">
         {children}
       </main>
       <Suspense fallback={null}>

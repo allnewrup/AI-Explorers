@@ -1,5 +1,6 @@
 import { Suspense } from "react"
 import Link from "next/link"
+import { UserRound } from "lucide-react"
 import { Logo } from "@/components/brand/logo"
 import { AvatarDisc } from "@/components/gamification/avatar-disc"
 import { StreakBadge, XpPill } from "@/components/gamification/stats"
@@ -21,14 +22,14 @@ export function ChildIdentity({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <StreakBadge days={streak} className="hidden sm:inline-flex" />
+      <StreakBadge days={streak} className="hidden sm:inline-flex lg:hidden xl:inline-flex" />
       <XpPill totalXp={totalXp} />
       <span className="flex items-center gap-2">
         <AvatarDisc avatarKey={avatarKey} size="sm" />
-        <span className="hidden max-w-36 truncate font-heading font-semibold text-ink-900 lg:inline">
+        <span className="hidden max-w-40 truncate font-heading font-semibold text-ink-900 xl:inline">
           {displayName}
         </span>
-        <span className="sr-only lg:hidden">{displayName}</span>
+        <span className="sr-only xl:hidden">{displayName}</span>
       </span>
     </div>
   )
@@ -47,8 +48,11 @@ export function ChildTopBar({ identity }: { identity: React.ReactNode }) {
         </div>
         <div className="flex items-center gap-2">
           {identity}
-          <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
-            <Link href={routes.parent.dashboard}>Parent area</Link>
+          <Button asChild variant="ghost" size="sm" className="px-3">
+            <Link href={routes.parent.dashboard}>
+              <UserRound aria-hidden="true" />
+              <span className="sr-only sm:not-sr-only lg:sr-only xl:not-sr-only">Parent area</span>
+            </Link>
           </Button>
         </div>
       </div>

@@ -8,7 +8,7 @@ export function XpPill({ totalXp, className }: { totalXp: number; className?: st
   return (
     <span
       className={cn(
-        "inline-flex h-10 items-center gap-1.5 rounded-full bg-sun-400 px-4 font-heading text-base font-bold text-ink-900",
+        "inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-sun-400 px-4 font-heading text-base font-bold whitespace-nowrap text-ink-900",
         className
       )}
     >
@@ -27,7 +27,7 @@ export function StreakBadge({ days, className }: { days: number; className?: str
   return (
     <span
       className={cn(
-        "inline-flex h-10 items-center gap-1.5 rounded-full px-4 font-heading text-base font-bold",
+        "inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full px-4 font-heading text-base font-bold whitespace-nowrap",
         active ? "bg-coral-100 text-coral-700" : "bg-ink-100 text-ink-600",
         className
       )}

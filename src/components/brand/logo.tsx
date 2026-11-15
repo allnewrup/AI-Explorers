@@ -17,7 +17,7 @@ export function Logo({
       <SparkMark size={38} />
       <span
         className={cn(
-          "font-heading text-xl leading-none font-bold tracking-tight",
+          "font-heading text-xl leading-none font-bold tracking-tight whitespace-nowrap",
           tone === "dark" ? "text-ink-900" : "text-white"
         )}
       >

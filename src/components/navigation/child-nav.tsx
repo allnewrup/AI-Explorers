@@ -32,14 +32,14 @@ function isActive(pathname: string, item: NavItem): boolean {
 
 /**
  * Child-area navigation. `top` is the desktop bar; `bottom` is the thumb-reach
- * tab bar shown on phones and small tablets.
+ * tab bar shown on phones and tablets (below the `lg` breakpoint).
  */
 export function ChildNav({ variant }: { variant: "top" | "bottom" }) {
   const pathname = usePathname()
 
   if (variant === "top") {
     return (
-      <nav aria-label="Explorer" className="hidden items-center gap-1 md:flex">
+      <nav aria-label="Explorer" className="hidden items-center gap-1 lg:flex">
         {ITEMS.map((item) => {
           const active = isActive(pathname, item)
           return (
@@ -48,7 +48,7 @@ export function ChildNav({ variant }: { variant: "top" | "bottom" }) {
               href={item.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "inline-flex h-11 items-center gap-2 rounded-xl px-4 font-heading font-semibold transition-colors",
+                "inline-flex h-11 items-center gap-1.5 rounded-xl px-3 font-heading font-semibold whitespace-nowrap transition-colors",
                 active ? "bg-electric-100 text-electric-700" : "text-ink-600 hover:bg-ink-100 hover:text-ink-900"
               )}
             >
@@ -64,7 +64,7 @@ export function ChildNav({ variant }: { variant: "top" | "bottom" }) {
   return (
     <nav
       aria-label="Explorer"
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-ink-200 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-ink-200 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
     >
       <ul className="mx-auto grid max-w-lg grid-cols-5">
         {ITEMS.map((item) => {
