@@ -15,11 +15,11 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-[0_4px_0_0_var(--color-electric-700)] hover:bg-electric-500 active:translate-y-1 active:shadow-none",
+          "bg-primary text-primary-foreground shadow-[0_4px_0_0_var(--color-electric-700)] hover:bg-electric-700 active:translate-y-1 active:shadow-none",
         playful:
           "bg-sun-400 text-ink-900 shadow-[0_4px_0_0_var(--color-sun-500)] hover:bg-sun-300 active:translate-y-1 active:shadow-none",
         success:
-          "bg-aqua-700 text-white shadow-[0_4px_0_0_#0a5f5a] hover:bg-aqua-600 active:translate-y-1 active:shadow-none",
+          "bg-aqua-700 text-white shadow-[0_4px_0_0_#084a46] hover:bg-[#0e7a73] active:translate-y-1 active:shadow-none",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-nebula-300/40",
         outline:
@@ -27,7 +27,7 @@ const buttonVariants = cva(
         ghost: "text-ink-700 hover:bg-ink-100 hover:text-ink-900",
         "ghost-inverse": "text-white hover:bg-white/10",
         destructive:
-          "bg-destructive text-white shadow-[0_4px_0_0_var(--color-coral-700)] hover:bg-coral-500 active:translate-y-1 active:shadow-none",
+          "bg-destructive text-white shadow-[0_4px_0_0_var(--color-coral-700)] hover:bg-coral-700 active:translate-y-1 active:shadow-none",
         link: "h-auto rounded-md px-0 font-sans font-bold text-electric-700 underline-offset-4 hover:underline",
       },
       size: {

@@ -46,7 +46,7 @@ import { PreviewChallenge, PreviewLessonActions, PreviewQuiz } from "../preview-
  * project to be seen at all.
  *
  * It is not part of the product: every path here returns 404 in production
- * builds, and it never reads or writes a database.
+ * builds (see `isEnabled`), and it never reads or writes a database.
  */
 
 const SCREENS = [
@@ -76,7 +76,14 @@ export function generateStaticParams() {
   return SCREENS.map((screen) => ({ screen }))
 }
 
-const isEnabled = process.env.NODE_ENV !== "production"
+/**
+ * On in development. In production builds it is off unless the build was made
+ * with ENABLE_DESIGN_PREVIEW=1, which only the end-to-end test build does (so
+ * the signed-in screens can be checked for accessibility and responsiveness).
+ * Never set that variable on a real deployment.
+ */
+const isEnabled =
+  process.env.NODE_ENV !== "production" || process.env.ENABLE_DESIGN_PREVIEW === "1"
 
 function PreviewBanner({ current }: { current: Screen }) {
   return (

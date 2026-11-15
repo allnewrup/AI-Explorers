@@ -141,8 +141,15 @@ describe("security invariants", () => {
 
   it("the design preview is disabled in production builds", () => {
     const page = read(join(SRC, "app", "design-preview", "[screen]", "page.tsx"))
-    expect(page).toMatch(/process\.env\.NODE_ENV !== "production"/)
+    // Off in production unless a build explicitly opts in (the e2e test build).
+    expect(page).toMatch(
+      /const isEnabled =\s+process\.env\.NODE_ENV !== "production" \|\| process\.env\.ENABLE_DESIGN_PREVIEW === "1"/
+    )
     expect(page).toMatch(/if \(!isEnabled\) notFound\(\)/)
+    // The opt-in must never be baked into the project's own configuration.
+    for (const file of ["next.config.ts", "package.json", ".env.example"]) {
+      expect(read(join(ROOT, file)), file).not.toContain("ENABLE_DESIGN_PREVIEW")
+    }
     // Fixtures are only imported by the preview itself.
     const importers = sourceFiles.filter(
       (file) => !/design-preview/.test(file) && /design-preview\/(fixtures|preview-interactive)/.test(read(file))

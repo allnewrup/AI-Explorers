@@ -8,6 +8,7 @@
  * Brand palette (from the product brief) lives at the 500/900 steps. The
  * neighbouring steps are derived so that text and controls meet WCAG AA:
  *   - white text sits on electric-600, nebula-600, aqua-700 (>= 4.5:1)
+ *   - the 700 steps are also used as text on their own 50/100 tints (>= 4.5:1)
  *   - the raw brand colours (electric-500, nebula-500, aqua-500, sun-400) are
  *     used for large shapes, illustration and navy-on-colour surfaces.
  */
@@ -46,7 +47,7 @@
   --color-aqua-300: #93e0da;
   --color-aqua-500: #37c8be;
   --color-aqua-600: #1a9e95;
-  --color-aqua-700: #0f7f78;
+  --color-aqua-700: #0c6b65;
 
   /* Warm yellow — rewards, highlights */
   --color-sun-50: #fffaeb;

@@ -301,9 +301,10 @@ describe("shared states and primitives", () => {
   })
 
   it("empty state shows a title, an explanation and an action", () => {
-    render(<EmptyState title="No XP yet" description="Finish a lesson." action={<a href="/child/learn">Find a lesson</a>} />)
+    render(<EmptyState title="No XP yet" description="Finish a lesson." action={<button type="button">Find a lesson</button>} />)
     expect(screen.getByText("No XP yet")).toBeInTheDocument()
-    expect(screen.getByRole("link", { name: "Find a lesson" })).toBeInTheDocument()
+    expect(screen.getByText("Finish a lesson.")).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "Find a lesson" })).toBeInTheDocument()
   })
 
   it("setup screen states plainly that nothing is simulated", () => {

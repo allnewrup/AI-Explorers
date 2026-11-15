@@ -153,8 +153,8 @@ describe("quiz actions", () => {
     ["answerQuestionAction", [{ attemptId: UUID(9), questionId: "x", optionId: UUID(3) }]],
   ] as const)("%s rejects malformed ids before touching the database", async (name, args) => {
     session.getActiveChild.mockResolvedValue(activeChild)
-    const module = await quizzes()
-    const action = module[name] as (...input: unknown[]) => Promise<{ ok: boolean }>
+    const quizActions = await quizzes()
+    const action = quizActions[name] as (...input: unknown[]) => Promise<{ ok: boolean }>
     expect((await action(...args)).ok).toBe(false)
     expect(rpc).not.toHaveBeenCalled()
   })
