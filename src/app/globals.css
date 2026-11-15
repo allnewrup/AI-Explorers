@@ -1,26 +1,233 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * AI Explorers design tokens
+ * --------------------------
+ * Brand palette (from the product brief) lives at the 500/900 steps. The
+ * neighbouring steps are derived so that text and controls meet WCAG AA:
+ *   - white text sits on electric-600, nebula-600, aqua-700 (>= 4.5:1)
+ *   - the raw brand colours (electric-500, nebula-500, aqua-500, sun-400) are
+ *     used for large shapes, illustration and navy-on-colour surfaces.
+ */
+@theme {
+  /* Midnight navy — text and dark surfaces */
+  --color-ink-950: #0b1229;
+  --color-ink-900: #111b3a;
+  --color-ink-800: #1b2854;
+  --color-ink-700: #2a3768;
+  --color-ink-600: #414e7a;
+  --color-ink-500: #4a5578;
+  --color-ink-400: #8791b5;
+  --color-ink-300: #b4bcd6;
+  --color-ink-200: #d5daea;
+  --color-ink-100: #e9ecf5;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Electric blue — primary actions */
+  --color-electric-50: #f1f5ff;
+  --color-electric-100: #e3ebfe;
+  --color-electric-300: #9db7fa;
+  --color-electric-500: #4778f5;
+  --color-electric-600: #3563e9;
+  --color-electric-700: #2a4fc4;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* Purple — creativity, secondary accents */
+  --color-nebula-50: #f6f2fe;
+  --color-nebula-100: #ece6fc;
+  --color-nebula-300: #bca9f3;
+  --color-nebula-500: #8665e8;
+  --color-nebula-600: #6d4ad8;
+  --color-nebula-700: #5837b8;
+
+  /* Turquoise — success, progress */
+  --color-aqua-50: #eefbfa;
+  --color-aqua-100: #ddf6f4;
+  --color-aqua-300: #93e0da;
+  --color-aqua-500: #37c8be;
+  --color-aqua-600: #1a9e95;
+  --color-aqua-700: #0f7f78;
+
+  /* Warm yellow — rewards, highlights */
+  --color-sun-50: #fffaeb;
+  --color-sun-100: #fff4d6;
+  --color-sun-300: #ffe59c;
+  --color-sun-400: #ffd66b;
+  --color-sun-500: #f9c440;
+  --color-sun-700: #8a5f00;
+
+  /* Coral — errors and "try again" feedback */
+  --color-coral-50: #fef2f3;
+  --color-coral-100: #fde3e6;
+  --color-coral-500: #e5566a;
+  --color-coral-600: #c8324a;
+  --color-coral-700: #a3243a;
+
+  --color-mist: #f5f7fc;
+
+  /* Elevation */
+  --shadow-soft: 0 1px 2px rgb(17 27 58 / 0.04), 0 4px 16px rgb(17 27 58 / 0.06);
+  --shadow-card: 0 2px 4px rgb(17 27 58 / 0.04), 0 12px 32px rgb(17 27 58 / 0.08);
+  --shadow-lift: 0 4px 8px rgb(17 27 58 / 0.06), 0 24px 48px rgb(17 27 58 / 0.12);
+  --shadow-glow: 0 0 0 1px rgb(71 120 245 / 0.12), 0 12px 40px rgb(71 120 245 / 0.28);
+
+  /* Motion */
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-twinkle: twinkle 3.5s ease-in-out infinite;
+  --animate-pop: pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-wave: wave 2.4s ease-in-out infinite;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.35; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.1); }
+  }
+  @keyframes pop {
+    0% { opacity: 0; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes wave {
+    0%, 60%, 100% { transform: rotate(0deg); }
+    15% { transform: rotate(-16deg); }
+    30% { transform: rotate(10deg); }
+    45% { transform: rotate(-10deg); }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@theme inline {
+  --font-sans: var(--font-nunito), ui-rounded, "Segoe UI", system-ui, sans-serif;
+  --font-heading: var(--font-fredoka), ui-rounded, "Segoe UI", system-ui, sans-serif;
+  --font-display: var(--font-fredoka), ui-rounded, "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Radius scale — generous, friendly corners */
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.25);
+  --radius-2xl: calc(var(--radius) * 1.5);
+  --radius-3xl: calc(var(--radius) * 2);
+  --radius-4xl: calc(var(--radius) * 2.5);
+}
+
+:root {
+  --radius: 1rem;
+
+  --background: var(--color-mist);
+  --foreground: var(--color-ink-900);
+  --card: #ffffff;
+  --card-foreground: var(--color-ink-900);
+  --popover: #ffffff;
+  --popover-foreground: var(--color-ink-900);
+  --primary: var(--color-electric-600);
+  --primary-foreground: #ffffff;
+  --secondary: var(--color-nebula-100);
+  --secondary-foreground: var(--color-nebula-700);
+  --muted: var(--color-ink-100);
+  --muted-foreground: var(--color-ink-500);
+  --accent: var(--color-electric-100);
+  --accent-foreground: var(--color-electric-700);
+  --destructive: var(--color-coral-600);
+  --border: var(--color-ink-200);
+  --input: var(--color-ink-400);
+  --ring: var(--color-electric-500);
+  --chart-1: var(--color-electric-500);
+  --chart-2: var(--color-nebula-500);
+  --chart-3: var(--color-aqua-500);
+  --chart-4: var(--color-sun-500);
+  --chart-5: var(--color-coral-500);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  h1, h2, h3, h4 {
+    @apply font-heading tracking-tight text-balance;
+    line-height: 1.15;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  /* A clear, consistent keyboard focus indicator everywhere. */
+  :focus-visible {
+    outline: 3px solid var(--ring);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--color-sun-300);
+    color: var(--color-ink-900);
+  }
+}
+
+@layer utilities {
+  /* Decorative starfield used on dark hero surfaces. */
+  .bg-starfield {
+    background-image:
+      radial-gradient(1.5px 1.5px at 12% 22%, rgb(255 255 255 / 0.8), transparent 60%),
+      radial-gradient(1px 1px at 28% 68%, rgb(255 255 255 / 0.6), transparent 60%),
+      radial-gradient(1.5px 1.5px at 46% 14%, rgb(255 255 255 / 0.7), transparent 60%),
+      radial-gradient(1px 1px at 63% 78%, rgb(255 255 255 / 0.55), transparent 60%),
+      radial-gradient(2px 2px at 78% 30%, rgb(255 255 255 / 0.75), transparent 60%),
+      radial-gradient(1px 1px at 91% 62%, rgb(255 255 255 / 0.6), transparent 60%),
+      radial-gradient(1px 1px at 7% 86%, rgb(255 255 255 / 0.5), transparent 60%),
+      radial-gradient(1.5px 1.5px at 55% 46%, rgb(255 255 255 / 0.45), transparent 60%);
+  }
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
