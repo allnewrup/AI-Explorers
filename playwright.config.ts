@@ -38,10 +38,11 @@ const common = {
 function server(name: string, port: number, env: Record<string, string>) {
   return {
     name,
-    command: `npx next build && npx next start --port ${port}`,
+    // Builds (one build at a time, see the script) and then serves.
+    command: `node scripts/e2e-serve.mjs ${port}`,
     url: `http://localhost:${port}`,
     reuseExistingServer: !process.env.CI,
-    timeout: 300_000,
+    timeout: 420_000,
     stdout: "ignore" as const,
     stderr: "pipe" as const,
     env: { ...common, NEXT_DIST_DIR: `.next-e2e/${name}`, ...env },
