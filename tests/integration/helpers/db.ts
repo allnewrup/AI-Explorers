@@ -30,7 +30,16 @@ export function listMigrationFiles(): string[] {
  * exactly as PostgREST does.
  */
 export class TestDatabase {
+  /** Requests run one at a time: the embedded database has a single connection. */
+  private queue: Promise<unknown> = Promise.resolve()
+
   private constructor(private readonly pg: PGlite) {}
+
+  private enqueue<T>(task: () => Promise<T>): Promise<T> {
+    const next = this.queue.then(task, task)
+    this.queue = next.catch(() => undefined)
+    return next
+  }
 
   static async create(options: { seed?: boolean } = {}): Promise<TestDatabase> {
     const pg = new PGlite()
@@ -57,17 +66,29 @@ export class TestDatabase {
   }
 
   /** Superuser access, for test setup and for inspecting the true state. */
-  admin: Query = async <T extends Row = Row>(sql: string, params: unknown[] = []) => {
-    const result = await this.pg.query<T>(sql, params)
-    return result.rows
-  }
+  admin: Query = <T extends Row = Row>(sql: string, params: unknown[] = []) =>
+    this.enqueue(async () => {
+      const result = await this.pg.query<T>(sql, params)
+      return result.rows
+    })
 
   /** Applies a whole SQL script as superuser (used to re-run seed.sql). */
-  async execScript(sql: string): Promise<void> {
-    await this.pg.exec(sql)
+  execScript(sql: string): Promise<void> {
+    return this.enqueue(async () => {
+      await this.pg.exec(sql)
+    })
   }
 
-  private async asRole<T>(
+  private asRole<T>(
+    role: "anon" | "authenticated" | "service_role",
+    userId: string | null,
+    run: (query: Query) => Promise<T>,
+    extraClaims: Record<string, unknown> = {}
+  ): Promise<T> {
+    return this.enqueue(() => this.runAsRole(role, userId, run, extraClaims))
+  }
+
+  private async runAsRole<T>(
     role: "anon" | "authenticated" | "service_role",
     userId: string | null,
     run: (query: Query) => Promise<T>,

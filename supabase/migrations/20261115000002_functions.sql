@@ -1344,10 +1344,10 @@ begin
 end;
 $$;
 
--- Creates or updates a lesson together with its quiz, then stores a version
--- snapshot. Question and option ids are kept stable across edits so learner
+-- Creates (p_lesson_id omitted) or updates a lesson together with its quiz, then
+-- stores a version snapshot. Question and option ids are kept stable across edits so learner
 -- history and "already rewarded" records stay attached to the right question.
-create function public.admin_upsert_lesson(p_lesson_id uuid, p_payload jsonb)
+create function public.admin_upsert_lesson(p_payload jsonb, p_lesson_id uuid default null)
 returns uuid
 language plpgsql
 security definer

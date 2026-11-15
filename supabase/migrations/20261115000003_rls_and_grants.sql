@@ -268,6 +268,6 @@ grant execute on function public.get_weekly_leaderboard(uuid, integer) to authen
 -- The admin functions are executable by any signed-in user at the SQL level,
 -- and each one immediately rejects callers who are not administrators.
 grant execute on function public.admin_get_lesson(uuid) to authenticated;
-grant execute on function public.admin_upsert_lesson(uuid, jsonb) to authenticated;
+grant execute on function public.admin_upsert_lesson(jsonb, uuid) to authenticated;
 grant execute on function public.admin_set_lesson_status(uuid, public.lesson_status) to authenticated;
 grant execute on function public.admin_content_overview() to authenticated;

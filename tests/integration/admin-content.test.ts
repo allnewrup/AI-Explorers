@@ -106,8 +106,8 @@ describe("content management", () => {
 
   describe("rule 7 — only administrators create, update or publish content", () => {
     it.each([
-      ["admin_upsert_lesson", () => [null, lessonPayload()]],
-      ["admin_upsert_lesson", () => [seedIds.lesson(LESSON_A), lessonPayload()]],
+      ["admin_upsert_lesson", () => [lessonPayload(), null]],
+      ["admin_upsert_lesson", () => [lessonPayload(), seedIds.lesson(LESSON_A)]],
       ["admin_set_lesson_status", () => [seedIds.lesson(LESSON_A), "draft"]],
       ["admin_set_lesson_status", () => [seedIds.lesson(LESSON_A), "archived"]],
       ["admin_get_lesson", () => [seedIds.lesson(LESSON_A)]],
@@ -193,7 +193,7 @@ describe("content management", () => {
 
   describe("rule 6 — drafts stay invisible to ordinary users", () => {
     it("an administrator saves a new lesson as a draft, with its quiz and a first version", async () => {
-      draftId = await db.rpc<string>(f.admin, "admin_upsert_lesson", [null, lessonPayload()])
+      draftId = await db.rpc<string>(f.admin, "admin_upsert_lesson", [lessonPayload(), null])
       const doc = await getLesson(draftId)
 
       expect(doc.status).toBe("draft")
@@ -287,7 +287,7 @@ describe("content management", () => {
       ["questions_missing", { quiz: { title: "Empty", questions: [] } }],
     ])("blocks publishing when %s", async (reason, overrides) => {
       const slug = `incomplete-${reason.replace(/_/g, "-")}`
-      const id = await db.rpc<string>(f.admin, "admin_upsert_lesson", [null, lessonPayload({ slug, ...overrides })])
+      const id = await db.rpc<string>(f.admin, "admin_upsert_lesson", [lessonPayload({ slug, ...overrides }), null])
       const error = await captureError(db.rpc(f.admin, "admin_set_lesson_status", [id, "published"]))
       expect(error.message).toContain(`aie:publish_blocked:${reason}`)
       const rows = await db.admin<{ status: string }>("select status::text from public.lessons where id = $1", [id])
@@ -303,7 +303,7 @@ describe("content management", () => {
         slug: `bad-quiz-${options.length}-${options.filter((o) => o.is_correct).length}`,
         quiz: { title: "Bad", questions: [{ question_text: "Is this valid?", explanation: "", options }] },
       })
-      const error = await captureError(db.rpc(f.admin, "admin_upsert_lesson", [null, payload]))
+      const error = await captureError(db.rpc(f.admin, "admin_upsert_lesson", [payload, null]))
       expect(error.message).toContain(message)
       // The whole save is rolled back: no half-created lesson is left behind.
       const rows = await db.admin("select 1 from public.lessons where slug = $1", [payload.slug])
@@ -314,7 +314,7 @@ describe("content management", () => {
       const doc = await getLesson(draftId)
       expect(doc.status).toBe("published")
       const error = await captureError(
-        db.rpc(f.admin, "admin_upsert_lesson", [draftId, lessonPayload({ quiz: { title: "Emptied", questions: [] } })])
+        db.rpc(f.admin, "admin_upsert_lesson", [lessonPayload({ quiz: { title: "Emptied", questions: [] } }), draftId])
       )
       expect(error.message).toContain("aie:publish_blocked:questions_missing")
       expect((await getLesson(draftId)).quiz?.questions).toHaveLength(2)
@@ -322,7 +322,7 @@ describe("content management", () => {
 
     it("rejects a duplicate slug", async () => {
       const error = await captureError(
-        db.rpc(f.admin, "admin_upsert_lesson", [null, lessonPayload({ slug: LESSON_A })])
+        db.rpc(f.admin, "admin_upsert_lesson", [lessonPayload({ slug: LESSON_A }), null])
       )
       expect(error.code).toBe("23505")
     })
@@ -345,7 +345,7 @@ describe("content management", () => {
           ],
         },
       })
-      const error = await captureError(db.rpc(f.admin, "admin_upsert_lesson", [draftId, payload]))
+      const error = await captureError(db.rpc(f.admin, "admin_upsert_lesson", [payload, draftId]))
       expect(error.message).toContain("aie:question_not_in_quiz")
     })
   })
@@ -381,7 +381,7 @@ describe("content management", () => {
           ],
         },
       })
-      await db.rpc(f.admin, "admin_upsert_lesson", [draftId, edited])
+      await db.rpc(f.admin, "admin_upsert_lesson", [edited, draftId])
 
       const after = await getLesson(draftId)
       expect(after.title).toContain("(updated)")
@@ -413,8 +413,8 @@ describe("content management", () => {
       }))
       const row = await db.admin<Record<string, unknown>>("select * from public.lessons where id = $1", [quiz.lessonId])
       await db.rpc(f.admin, "admin_upsert_lesson", [
-        quiz.lessonId,
         { ...row[0], quiz: { title: "Quiz", passing_score: 60, questions } },
+        quiz.lessonId,
       ])
 
       const afterEdit = await db.asUser(f.parentA, (q) =>
@@ -519,7 +519,7 @@ describe("content management", () => {
 
       expect(await canRead()).toEqual([])
 
-      await db.rpc(f.admin, "admin_upsert_lesson", [draftId, lessonPayload({ video_asset_key: "voice/lesson.mp4" })])
+      await db.rpc(f.admin, "admin_upsert_lesson", [lessonPayload({ video_asset_key: "voice/lesson.mp4" }), draftId])
       expect(await canRead()).toEqual(["voice/lesson.mp4"])
 
       await db.rpc(f.admin, "admin_set_lesson_status", [draftId, "draft"])
