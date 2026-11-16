@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next"
 import { Fredoka, Nunito } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
 import { Toaster } from "@/components/ui/sonner"
 import { siteConfig } from "@/config/site"
 import "./globals.css"
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         {children}
         <Toaster />
+        <Analytics />
       </body>
     </html>
   )
