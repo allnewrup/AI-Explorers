@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   // The end-to-end tests build the app twice with different settings and keep
   // the outputs apart with NEXT_DIST_DIR. Normal builds use ".next".
   distDir: process.env.NEXT_DIST_DIR || ".next",
