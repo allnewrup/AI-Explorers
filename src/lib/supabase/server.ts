@@ -2,6 +2,7 @@ import "server-only"
 
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
+import { connection } from "next/server"
 import { readSupabaseEnv } from "@/config/env"
 import type { Database } from "@/types/database"
 
@@ -25,6 +26,9 @@ export async function createClient() {
   const env = readSupabaseEnv()
   if (!env) throw new SupabaseNotConfiguredError()
 
+  // Session handling reads the clock (token expiry). Declaring a request-time
+  // dependency keeps Next.js from trying to prerender or prefetch-render it.
+  await connection()
   const cookieStore = await cookies()
 
   return createServerClient<Database>(env.url, env.anonKey, {

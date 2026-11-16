@@ -10,8 +10,6 @@ import {
 
 /**
  * The whole product journey in a real browser against a real Supabase project.
- *
- * NOT YET EXECUTED: see README.md in this folder.
  */
 
 test.describe.configure({ mode: "serial" })
@@ -64,7 +62,7 @@ test.describe("live journey", () => {
     await page.getByRole("link", { name: /What Is Artificial Intelligence\?/ }).click()
 
     await expect(page.getByRole("heading", { level: 1, name: "What Is Artificial Intelligence?" })).toBeVisible()
-    await expect(page.getByText("Sample lesson")).toBeVisible()
+    await expect(page.getByRole("article").getByText("Sample lesson")).toBeVisible()
     await expect(page.getByTestId("media-pending")).toBeVisible()
     await expect(page.locator("video")).toHaveCount(0)
 

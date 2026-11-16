@@ -3,10 +3,7 @@
 These specs exercise the app against a **real Supabase project**: real sign-in,
 real row-level security through the API, real XP awarded by the database.
 
-> **Status: written but never executed.** No Supabase project was available
-> when this phase was built, so these two specs have not been run even once.
-> Expect to fix small things (selectors, timing) the first time you run them.
-> Everything else in the repository's test-suite has been run and passes.
+> **Status:** run against a development project on 16 Nov 2026: 11 of 11 passed.
 
 ## What they do
 

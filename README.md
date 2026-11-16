@@ -27,14 +27,14 @@ This repository is the **first implementation phase**: a working, security-minde
 | Landing page, privacy notice | Built. Verified in a browser at desktop and phone sizes. |
 | Database schema, RLS, scoring functions, seed | Built. **Verified** by 184 tests that apply the real migrations to embedded PostgreSQL and attempt unauthorised access. |
 | App ↔ database contract | **Verified**: the app's column lists and response schemas are run against the migrated database. |
-| Sign-up, login, password reset | Built against Supabase Auth. Logic tested with Supabase stubbed. **Not yet run against a real Supabase project.** |
-| Child, parent and admin screens | Built. Layout, keyboard use and accessibility verified through a development preview with sample data. **Not yet run against a real Supabase project.** |
+| Login, onboarding, lesson, quiz, parent dashboard, admin access | Built. **Verified against a real Supabase project** by the live tests (11 passing). |
+| Sign-up email confirmation, password reset emails | Built. Logic tested with Supabase stubbed. **Not exercised live**: the live tests create pre-confirmed accounts, so no email is sent. |
+| Admin lesson editor (saving and publishing through the UI) | Built. The database functions behind it are verified; the editor screen itself is verified for layout only, not by a live click-through. |
 | Video | No videos exist. Lessons show a "Video coming soon" panel and the written lesson. A real player appears only when an administrator attaches a stored video. |
 
-No Supabase project, Docker or Supabase CLI was available while this phase was built, so the
-complete signed-in journey has **not** been exercised end to end against live infrastructure.
-Two test files for that purpose are ready in `tests/e2e/live` (see its README) and should be
-the first thing you run after connecting a project.
+The live tests in `tests/e2e/live` were run against a development Supabase project
+(`ai-explorers-dev`) on 16 Nov 2026 and pass. Run them again after any change to the
+migrations or to the auth flow.
 
 There is **no mock backend**. Without Supabase settings, every page that needs accounts or
 data shows a "Supabase is not configured" screen.
@@ -312,7 +312,7 @@ npm run types:generate
 
 ## Known limitations
 
-- **Not verified against live Supabase.** See [Status](#status-read-this-first).
+- **Email flows and the admin editor are not verified live.** See [Status](#status-read-this-first).
 - **Consent is not verifiable parental consent.** A ticked box by a signed-in adult is stored
   as evidence only. COPPA and UK/EU GDPR obligations (verifiable consent, a named data
   controller, a reviewed privacy policy) must be met before any public launch. The privacy

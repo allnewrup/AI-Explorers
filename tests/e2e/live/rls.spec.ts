@@ -12,8 +12,6 @@ import {
 /**
  * Row-level security against a REAL Supabase project, through the same HTTP
  * API a browser uses. Mirrors tests/integration/access-control.test.ts.
- *
- * NOT YET EXECUTED: see README.md in this folder.
  */
 
 const DENIED = ["42501", "PGRST301", "PGRST302"]
