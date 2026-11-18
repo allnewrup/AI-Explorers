@@ -11,7 +11,7 @@ const DOMAIN_MESSAGES: Record<string, string> = {
   "aie:child_not_found": "We could not find that explorer profile.",
   "aie:child_inactive": "This explorer profile is paused. A parent can switch it back on.",
   "aie:child_limit_reached": `You can have up to ${MAX_CHILD_PROFILES} explorer profiles.`,
-  "aie:invalid_display_name": "Please choose an explorer name from the suggestions.",
+  "aie:invalid_display_name": "That explorer name is not allowed. Use 3–20 letters or numbers and keep it friendly.",
   "aie:policy_version_required": "Please review and accept the consent statements.",
   "aie:lesson_not_available": "That lesson is not available right now.",
   "aie:lesson_not_found": "That lesson could not be found.",

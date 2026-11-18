@@ -253,11 +253,11 @@ describe("child profile actions", () => {
     expect(rpc.mock.calls[0]![1]).toMatchObject({ p_show_on_leaderboard: true })
   })
 
-  it("reject a free-text name or missing consent without calling the database", async () => {
+  it("reject a disallowed name or missing consent without calling the database", async () => {
     session.getProfile.mockResolvedValue(parent)
     const { createChildProfileAction } = await profiles()
 
-    const badName = await createChildProfileAction(idleFormState, form({ ...validChild, displayName: "Mia Carter" }))
+    const badName = await createChildProfileAction(idleFormState, form({ ...validChild, displayName: "Mia_Carter!" }))
     expect(badName.fieldErrors).toHaveProperty("displayName")
 
     const noConsent = await createChildProfileAction(idleFormState, form({ ...validChild, consentData: "" }))

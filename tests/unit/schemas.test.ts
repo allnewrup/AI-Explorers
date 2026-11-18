@@ -85,7 +85,7 @@ describe("child profile validation", () => {
   })
 
   it.each([
-    [{ displayName: "Mia Carter" }, "displayName"],
+    [{ displayName: "Mia_Carter!" }, "displayName"],
     [{ avatarKey: "selfie" }, "avatarKey"],
     [{ ageBand: "2015-04-01" }, "ageBand"],
     [{ consentTerms: false }, "consentTerms"],

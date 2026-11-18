@@ -5,6 +5,7 @@
  * by the database functions and read back from stored rows.
  */
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest"
+import { BLOCKED_NAME_WORDS } from "@/config/explorer-names"
 import { MAX_CHILD_PROFILES, XP_RULES } from "@/config/gamification"
 import { seedIds } from "../../supabase/seed/build-seed"
 import { captureError, PERMISSION_DENIED, TestDatabase } from "./helpers/db"
@@ -604,7 +605,11 @@ describe("scoring and gamification", () => {
       ])
     })
 
-    it.each(["Mia Carter", "mia", "CosmicOtter", "CosmicOtter4", "HackerDude99", "<script>42", "", "CosmicOtter420"])(
+    it.each(["Space Captain 7", "Mia", "CosmicOtter"])("accepts the typed display name %j", async (name) => {
+      await db.createChild(parent, { displayName: name })
+    })
+
+    it.each(["mi", "<script>42", "", " Mia", "Mia  Star", "Mia_Star", "12345", "SuperLongExplorerName1", "MegaShitStar", "Big Fu ck"])(
       "rejects the display name %j",
       async (name) => {
         const error = await captureError(db.createChild(parent, { displayName: name }))
@@ -622,10 +627,19 @@ describe("scoring and gamification", () => {
       expect(rows).toEqual([{ display_name: "SolarWizard58", avatar_key: "atom", age_band: "13-15" }])
     })
 
-    it("rejects renaming a child to free text through a direct update", async () => {
+    it("blocks every word in the app's blocked list (lists must match)", async () => {
+      for (const word of BLOCKED_NAME_WORDS) {
+        const rows = await db.admin<{ ok: boolean }>("select app_private.is_valid_explorer_name($1) as ok", [
+          `Star${word}`,
+        ])
+        expect(rows[0]?.ok, word).toBe(false)
+      }
+    })
+
+    it("rejects renaming a child to a disallowed name through a direct update", async () => {
       const error = await captureError(
         db.asUser(parent, (q) =>
-          q("update public.child_profiles set display_name = 'Mia Carter' where id = $1", [child])
+          q("update public.child_profiles set display_name = '<b>Mia</b>' where id = $1", [child])
         )
       )
       expect(error.code).toBe("23514")

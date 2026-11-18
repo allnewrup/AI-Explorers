@@ -208,7 +208,7 @@ const STEPS: { icon: LucideIcon; title: string; body: string; tone: string }[] =
   {
     icon: Users,
     title: "Set up an explorer profile",
-    body: "Choose a fun explorer name, an avatar and an age band. No real name or birthday needed.",
+    body: "Pick or type a fun explorer name, then an avatar and an age band. No birthday needed.",
     tone: "bg-nebula-100 text-nebula-700",
   },
   {
@@ -399,8 +399,8 @@ const SAFETY: { icon: LucideIcon; title: string; body: string }[] = [
   },
   {
     icon: EyeOff,
-    title: "No real names",
-    body: "Children appear under a generated explorer name such as “CosmicOtter42”. Nobody types free text that others can see.",
+    title: "Made-up names",
+    body: "Children appear under an explorer name such as “CosmicOtter42”. Parents choose it, and rude words are blocked.",
   },
   {
     icon: CalendarCheck,

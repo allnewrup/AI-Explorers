@@ -1,14 +1,14 @@
 /**
  * Explorer names
  * --------------
- * Child display names are assembled from these two fixed word lists plus a
- * two-digit number (for example "CosmicOtter42"). Nobody types a free-text
- * name, so real names and inappropriate words cannot reach shared screens such
- * as the leaderboard.
+ * A parent either picks a suggestion assembled from the two word lists below
+ * plus a two-digit number (for example "CosmicOtter42") or types their own.
  *
- * The same lists are enforced by a CHECK constraint in the database
- * (`app_private.is_valid_explorer_name`). A database test asserts both copies
- * are identical — change them together.
+ * A typed name must be 3–20 letters or numbers, with single spaces between
+ * words, at least one letter, and none of the blocked words. The same rules
+ * are enforced by a CHECK constraint in the database
+ * (`app_private.is_valid_explorer_name`); database tests assert both copies
+ * agree — change them together.
  */
 export const EXPLORER_ADJECTIVES = [
   "Brave",
@@ -60,16 +60,48 @@ export const EXPLORER_NOUNS = [
   "Wizard",
 ] as const
 
-const NAME_PATTERN = /^([A-Z][a-z]+)([A-Z][a-z]+)([0-9]{2})$/
+export const EXPLORER_NAME_MIN_LENGTH = 3
+export const EXPLORER_NAME_MAX_LENGTH = 20
+
+/** Letters and digits, single spaces between words, no leading or trailing space. */
+const NAME_PATTERN = /^[A-Za-z0-9]+( [A-Za-z0-9]+)*$/
+
+/**
+ * Rejected anywhere in a name (case-insensitive, spaces ignored). Kept short
+ * and unambiguous on purpose; the database copy must match.
+ */
+export const BLOCKED_NAME_WORDS = [
+  "bastard",
+  "bitch",
+  "cock",
+  "cunt",
+  "dick",
+  "fag",
+  "fuck",
+  "hitler",
+  "nazi",
+  "nigg",
+  "penis",
+  "porn",
+  "pussy",
+  "rape",
+  "sex",
+  "shit",
+  "slut",
+  "twat",
+  "vagina",
+  "wank",
+  "whore",
+] as const
+
+export const EXPLORER_NAME_RULES =
+  "Use 3–20 letters or numbers (single spaces are fine) and keep it friendly."
 
 export function isValidExplorerName(name: string): boolean {
-  const match = NAME_PATTERN.exec(name)
-  if (!match) return false
-  const [, adjective, noun] = match
-  return (
-    (EXPLORER_ADJECTIVES as readonly string[]).includes(adjective ?? "") &&
-    (EXPLORER_NOUNS as readonly string[]).includes(noun ?? "")
-  )
+  if (name.length < EXPLORER_NAME_MIN_LENGTH || name.length > EXPLORER_NAME_MAX_LENGTH) return false
+  if (!NAME_PATTERN.test(name) || !/[A-Za-z]/.test(name)) return false
+  const squashed = name.replaceAll(" ", "").toLowerCase()
+  return !BLOCKED_NAME_WORDS.some((word) => squashed.includes(word))
 }
 
 /**

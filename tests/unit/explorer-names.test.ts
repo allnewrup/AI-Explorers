@@ -37,17 +37,21 @@ describe("explorer names", () => {
     expect(new Set(options).size).toBe(6)
   })
 
+  it.each(["Mia", "Space Captain 7", "cosmicotter42", "HackerDude99", "Zed"])("accepts the typed name %j", (name) => {
+    expect(isValidExplorerName(name)).toBe(true)
+  })
+
   it.each([
-    "Mia Carter",
-    "mia",
-    "CosmicOtter",
-    "CosmicOtter4",
-    "CosmicOtter420",
-    "cosmicotter42",
+    "mi",
     "CosmicOtter42 ",
-    "HackerDude99",
-    "CosmicHacker42",
+    " CosmicOtter42",
+    "Cosmic  Otter",
+    "Mia_Carter",
     "<b>CosmicOtter42</b>",
+    "12345",
+    "SuperLongExplorerName1",
+    "MegaShitStar",
+    "Big Fu ck",
     "",
   ])("rejects %j", (name) => {
     expect(isValidExplorerName(name)).toBe(false)

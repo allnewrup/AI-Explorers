@@ -5,11 +5,16 @@ import { Shuffle } from "lucide-react"
 import { FieldError } from "@/components/feedback/form"
 import { AvatarDisc } from "@/components/gamification/avatar-disc"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { NativeSelect } from "@/components/ui/native-select"
 import { AGE_BAND_HINTS, AGE_BAND_LABELS, AGE_BANDS, type AgeBand } from "@/config/age-bands"
 import { AVATAR_KEYS, AVATAR_LABELS, type AvatarKey } from "@/config/avatars"
-import { generateExplorerNameOptions } from "@/config/explorer-names"
+import {
+  EXPLORER_NAME_MAX_LENGTH,
+  EXPLORER_NAME_RULES,
+  generateExplorerNameOptions,
+} from "@/config/explorer-names"
 
 const NAME_COUNT = 6
 
@@ -34,6 +39,9 @@ export function ChildProfileFields({
       : initialNames
   const [names, setNames] = useState(startingNames)
   const [selectedName, setSelectedName] = useState(defaults?.displayName ?? startingNames[0] ?? "")
+  const [typingOwn, setTypingOwn] = useState(false)
+  const [ownName, setOwnName] = useState("")
+  const submittedName = typingOwn ? ownName.trim() : selectedName
   const [ageBand, setAgeBand] = useState<AgeBand>(
     (AGE_BANDS as readonly string[]).includes(defaults?.ageBand ?? "")
       ? (defaults?.ageBand as AgeBand)
@@ -47,7 +55,11 @@ export function ChildProfileFields({
     const fresh = generateExplorerNameOptions(NAME_COUNT)
     setNames(fresh)
     setSelectedName(fresh[0] ?? "")
+    setTypingOwn(false)
   }
+
+  const cardClass =
+    "flex cursor-pointer items-center justify-center rounded-2xl border-2 border-ink-200 bg-white px-4 py-3 text-center font-heading text-lg font-semibold text-ink-800 transition-colors hover:border-electric-300 has-checked:border-electric-500 has-checked:bg-electric-50 has-checked:text-electric-700 has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring"
 
   return (
     <div className="grid gap-8">
@@ -56,7 +68,7 @@ export function ChildProfileFields({
           <div>
             <legend className="font-heading text-lg font-semibold text-ink-900">Explorer name</legend>
             <p className="text-sm text-ink-500">
-              Pick a made-up name. We never ask for your child&apos;s real name.
+              Pick a suggestion or type your own. Please don&apos;t use your child&apos;s full real name.
             </p>
           </div>
           <Button type="button" variant="outline" size="sm" onClick={shuffle}>
@@ -66,24 +78,53 @@ export function ChildProfileFields({
         </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {names.map((name) => (
-            <label
-              key={name}
-              className="flex cursor-pointer items-center justify-center rounded-2xl border-2 border-ink-200 bg-white px-4 py-3 text-center font-heading text-lg font-semibold text-ink-800 transition-colors hover:border-electric-300 has-checked:border-electric-500 has-checked:bg-electric-50 has-checked:text-electric-700 has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring"
-            >
+            <label key={name} className={cardClass}>
               <input
                 type="radio"
-                name="displayName"
+                name="displayNameChoice"
                 value={name}
-                checked={selectedName === name}
-                onChange={() => setSelectedName(name)}
+                checked={!typingOwn && selectedName === name}
+                onChange={() => {
+                  setSelectedName(name)
+                  setTypingOwn(false)
+                }}
                 className="sr-only"
               />
               {name}
             </label>
           ))}
+          <label className={cardClass}>
+            <input
+              type="radio"
+              name="displayNameChoice"
+              value="__own__"
+              checked={typingOwn}
+              onChange={() => setTypingOwn(true)}
+              className="sr-only"
+            />
+            Type my own…
+          </label>
         </div>
+        {typingOwn ? (
+          <div className="grid max-w-sm gap-1.5">
+            <Label htmlFor="ownDisplayName">Your explorer name</Label>
+            <Input
+              id="ownDisplayName"
+              value={ownName}
+              onChange={(event) => setOwnName(event.target.value)}
+              maxLength={EXPLORER_NAME_MAX_LENGTH}
+              autoComplete="off"
+              autoFocus
+              aria-describedby="ownDisplayName-hint"
+            />
+            <p id="ownDisplayName-hint" className="text-sm text-ink-500">
+              {EXPLORER_NAME_RULES}
+            </p>
+          </div>
+        ) : null}
+        <input type="hidden" name="displayName" value={submittedName} />
         <p className="sr-only" aria-live="polite">
-          Selected name: {selectedName}
+          Selected name: {submittedName}
         </p>
         <FieldError name="displayName" messages={errors?.displayName} />
       </fieldset>

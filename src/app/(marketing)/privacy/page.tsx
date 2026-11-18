@@ -22,7 +22,7 @@ const SECTIONS: { title: string; items: string[] }[] = [
   {
     title: "What we store about a child",
     items: [
-      "A generated explorer name (for example “CosmicOtter42”), an avatar choice and an age band.",
+      "An explorer name you choose (a suggestion such as “CosmicOtter42”, or one you type), an avatar choice and an age band. Please do not use your child's full real name.",
       "Learning records: lessons opened and completed, quiz answers and scores, XP, streaks, achievements and daily challenge answers.",
       "Whether you have chosen to show the child on the shared leaderboard.",
     ],
@@ -30,7 +30,7 @@ const SECTIONS: { title: string; items: string[] }[] = [
   {
     title: "What we deliberately do not collect",
     items: [
-      "A child's real name, date of birth, email address, phone number, photo or location.",
+      "A child's date of birth, email address, phone number, photo or location. We do not ask for a real name.",
       "Free-text writing from children. There are no chat, comment or messaging features.",
       "Advertising identifiers. There are no adverts and no third-party advertising trackers in the app.",
     ],

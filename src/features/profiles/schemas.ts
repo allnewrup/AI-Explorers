@@ -1,11 +1,13 @@
 import { z } from "zod"
 import { AGE_BANDS } from "@/config/age-bands"
 import { AVATAR_KEYS } from "@/config/avatars"
-import { isValidExplorerName } from "@/config/explorer-names"
+import { EXPLORER_NAME_RULES, isValidExplorerName } from "@/config/explorer-names"
 
 const displayName = z
   .string()
-  .refine(isValidExplorerName, "Please choose an explorer name from the suggestions.")
+  .trim()
+  .min(1, "Please choose or type an explorer name.")
+  .refine(isValidExplorerName, EXPLORER_NAME_RULES)
 
 const avatarKey = z.enum(AVATAR_KEYS, "Please choose an avatar.")
 const ageBand = z.enum(AGE_BANDS, "Please choose an age band.")
